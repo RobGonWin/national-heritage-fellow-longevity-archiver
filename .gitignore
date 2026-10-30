@@ -1,0 +1,11 @@
+.env
+local-vault/
+.image-review/
+.loop/
+__pycache__/
+*.token
+
+build/
+__pycache__/
+*.egg-info/
+.pytest_cache/
