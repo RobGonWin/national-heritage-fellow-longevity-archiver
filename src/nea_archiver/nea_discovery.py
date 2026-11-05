@@ -28,7 +28,7 @@ DEFAULT_PROVIDERS = {
 
 def discovery_queries(person: dict, providers: dict | None = None) -> list[dict]:
     """Plan public-name searches; exclude age-screened people from expensive discovery."""
-    if person["status"] in {"verified_below_roma", "bounded_below_roma_at_cutoff"}:
+    if person["status"] in {"exact_lifespan_below_reference", "upper_bound_below_reference_at_cutoff"}:
         return []
     if person.get("privacy_label") != "public_ok":
         return []
@@ -111,7 +111,7 @@ def plan_cohorts(people: list[dict], *, cohort_size: int = 50,
     if isinstance(cohort_size, bool) or not isinstance(cohort_size, int) or cohort_size < 1:
         raise ValueError("Cohort size must be a positive integer")
     eligible = [person for person in people if person.get("privacy_label") == "public_ok"
-                and person["status"] not in {"verified_below_roma", "bounded_below_roma_at_cutoff"}
+                and person["status"] not in {"exact_lifespan_below_reference", "upper_bound_below_reference_at_cutoff"}
                 and person["person_id"] != reference_id]
     eligible.sort(key=lambda person: (person.get("priority", 0), person["person_id"]))
     cohorts = []

@@ -121,7 +121,7 @@ def relationship_episode(record: dict) -> dict:
 def male_person_coverage(people: list[dict], reference_id: str) -> dict:
     """Separate known-male competitors from unresolved sex and collectives."""
     others = [person for person in people if person.get("person_id") != reference_id]
-    excluded = {"verified_below_roma", "bounded_below_roma_at_cutoff"}
+    excluded = {"exact_lifespan_below_reference", "upper_bound_below_reference_at_cutoff"}
     open_people = [person for person in others if person.get("status") not in excluded]
     known_male = [person for person in open_people if person.get("sex") == "male"]
     sex_unknown = [person for person in open_people if person.get("sex") == "unknown"]

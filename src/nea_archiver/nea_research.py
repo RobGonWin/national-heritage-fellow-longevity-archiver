@@ -17,7 +17,7 @@ from nea_archiver.nea_dates import DEFAULT_CUTOFF, compare_age, parse_date_inter
 from nea_archiver.nea_discovery import discovery_queries, execute_batch, plan_cohorts
 from nea_archiver.nea_evidence import extract_page, inventory_local, require_private_destination
 
-EXCLUDED = {"verified_below_roma", "bounded_below_roma_at_cutoff"}
+EXCLUDED = {"exact_lifespan_below_reference", "upper_bound_below_reference_at_cutoff"}
 
 
 def read_json(path: Path) -> dict:
@@ -132,7 +132,7 @@ def adjudicate_person(person: dict, review: dict | None, cutoff: date) -> dict:
             result.update(birth=review["birth"], death=review.get("death"))
             if death_bound:
                 result.update(death_not_after=death_bound, completed_lifespan_documented=False)
-                result["status"] = ("bounded_below_roma_at_cutoff" if result["status"] in EXCLUDED
+                result["status"] = ("upper_bound_below_reference_at_cutoff" if result["status"] in EXCLUDED
                                     else "possible_competitor")
         elif review.get("completed_age_years") is not None:
             # A reported whole-year age bounds days to < the next birthday.
@@ -140,7 +140,7 @@ def adjudicate_person(person: dict, review: dict | None, cutoff: date) -> dict:
             if isinstance(years, bool) or not isinstance(years, int) or years < 0:
                 raise ValueError("Reported completed age must be a nonnegative integer")
             if years < 107 and review.get("death_by_cutoff"):
-                result.update(status="bounded_below_roma_at_cutoff",
+                result.update(status="upper_bound_below_reference_at_cutoff",
                               upper_age_calendar=f"reported completed age {years}; < {years + 1} years")
         if result["status"] in EXCLUDED:
             result["priority"] = 2
@@ -164,7 +164,7 @@ def ranking_closure(people: list[dict], groups: list[dict], reference_id: str) -
                   and person.get("sex") != "female" and person["status"] not in EXCLUDED
                   and person.get("status") != "muted_edge_case"]
     references = [person for person in people if person["person_id"] == reference_id]
-    reference_ready = bool(references and references[0]["status"] == "verified_equal_roma"
+    reference_ready = bool(references and references[0]["status"] == "exact_lifespan_equal_reference"
                            and references[0].get("sex") == "male")
     status = "established_as_of_cutoff" if reference_ready and not candidates and not groups else "not_established"
     muted = [person for person in people if person.get("status") == "muted_edge_case"

@@ -9,7 +9,7 @@ def _age_envelope(person: dict, decision: dict) -> dict:
     """Keep screening caps separate from documented completed lifespans."""
     envelope = {"lower": [0, 0], "upper": None, "upper_exclusive": False,
                 "basis": "unresolved_age"}
-    if person.get("status") not in EXCLUDED | {"verified_equal_roma", "verified_above_roma"}:
+    if person.get("status") not in EXCLUDED | {"exact_lifespan_equal_reference", "exact_lifespan_above_reference"}:
         return envelope
     if person.get("completed_lifespan_documented") and person.get("upper_age"):
         envelope.update(lower=person["upper_age"], upper=person["upper_age"],

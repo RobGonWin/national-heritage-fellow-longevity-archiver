@@ -24,7 +24,7 @@ GENERATOR = '1.0.0'
 FIELDS = ['person_id','display_name','fellowship_or_group','fellowship_year','person_role',
     'population_category','cutoff_date','birth_evidence','death_evidence','age_evidence_precision',
     'attained_age_or_bound','exact_lifespan_days','possible_rank_min','possible_rank_max',
-    'display_order','evidence_status','assumptions_and_limits','source_ids','public_source_urls',
+    'display_order','age_status','assumptions_and_limits','source_ids','public_source_urls',
     'source_publication_date','last_reviewed_at','review_status','public_image_url','image_credit',
     'rights_status','unresolved_reason','age_lower_years','age_lower_days','age_upper_years',
     'age_upper_days','upper_exclusive','evidence_classification','source_quality']

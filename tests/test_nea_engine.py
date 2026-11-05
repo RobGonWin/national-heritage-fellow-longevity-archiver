@@ -45,7 +45,7 @@ def test_unsupported_dates_fail_closed(value):
 def test_cutoff_screening_does_not_predict_lifespan():
     result = compare_age(parse_date_interval("1919"), None)
     assert result["upper_age"] == [107, 295]
-    assert result["status"] == "bounded_below_roma_at_cutoff"
+    assert result["status"] == "upper_bound_below_reference_at_cutoff"
     assert result["future_lifespan"] == "not_inferred"
     assert not result["completed_lifespan_documented"]
 
@@ -53,7 +53,7 @@ def test_cutoff_screening_does_not_predict_lifespan():
 def test_exact_and_partial_ages_have_different_labels():
     exact = compare_age(parse_date_interval("1900-01-01"), parse_date_interval("2008-01-01"))
     partial = compare_age(parse_date_interval("1900"), parse_date_interval("2008"))
-    assert exact["status"] == "verified_above_roma"
+    assert exact["status"] == "exact_lifespan_above_reference"
     assert partial["status"] == "possible_competitor"
     future = compare_age(parse_date_interval("1920-01-01"), parse_date_interval("2030-01-01"))
     assert future["endpoint"] == "2026-10-23"
@@ -93,7 +93,7 @@ def test_identity_conflict_cannot_remove_female_candidate():
 
 
 def test_reference_and_groups_gate_universal_closure():
-    reference = {"person_id": "r", "status": "verified_equal_roma", "sex": "male"}
+    reference = {"person_id": "r", "status": "exact_lifespan_equal_reference", "sex": "male"}
     assert ranking_closure([reference], [], "r")["status"] == "established_as_of_cutoff"
     assert ranking_closure([reference], [{"award_id": "g"}], "r")["status"] == "not_established"
     assert ranking_closure([], [], "r")["status"] == "not_established"
@@ -170,7 +170,7 @@ def test_disabled_provider_and_dry_run(tmp_path):
     assert not path.exists()
     execute_batch([query], {}, path)
     assert json.loads(path.read_text())["q"]["status"] == "manual_followup"
-    person = {"status": "bounded_below_roma_at_cutoff", "privacy_label": "public_ok"}
+    person = {"status": "upper_bound_below_reference_at_cutoff", "privacy_label": "public_ok"}
     assert discovery_queries(person) == []
     assert discovery_queries({"status": "possible_competitor", "privacy_label": "do_not_share"}) == []
 
@@ -192,7 +192,7 @@ def test_fifty_recipient_cohorts_cover_each_pending_person_once():
     people = [{"person_id": f"p-{index:03d}", "name": "Synthetic artist",
                "privacy_label": "public_ok", "status": "possible_competitor"}
               for index in range(123)]
-    people += [{"person_id": "excluded", "privacy_label": "public_ok", "status": "verified_below_roma"},
+    people += [{"person_id": "excluded", "privacy_label": "public_ok", "status": "exact_lifespan_below_reference"},
                {"person_id": "private", "privacy_label": "do_not_share", "status": "possible_competitor"}]
     cohorts = plan_cohorts(people, reference_id="p-000")
     assert [row["recipient_count"] for row in cohorts] == [50, 50, 22]
