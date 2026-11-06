@@ -243,7 +243,7 @@ def build_collective_comparisons(inventory: dict, awards: list[dict]) -> dict:
         "new_people_screened_below_reference": sum(p["status"] in EXCLUDED for p in added),
         "new_people_with_unresolved_age": sum(p["status"] not in EXCLUDED for p in added),
         "documented_above_reference_person_ids": [p["person_id"] for p in everyone
-                                                   if p["status"] == "verified_above_roma"],
+                                                   if p["status"] == "exact_lifespan_above_reference"],
         "identified_people_screened_below_reference": sum(p["status"] in EXCLUDED for p in everyone),
         "unresolved_membership_boundaries": len(open_awards),
         "boundaries_age_screened_without_complete_roster": len(age_screened),

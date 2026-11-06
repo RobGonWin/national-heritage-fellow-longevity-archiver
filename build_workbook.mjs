@@ -60,7 +60,7 @@ readme.getRange('B1:B21').format.columnWidth=112;
 readme.getRange('B2:B21').format.wrapText=true;readme.getRange('A2:B21').format.rowHeight=42;
 const all=table('All Identified Subjects',d.people,allFields);
 const named=table('Named Fellows',d.people.filter(r=>r.person_role==='named_fellow'),allFields);
-const leadingFields=['display_name','fellowship_year','age_evidence_precision','attained_age_or_bound','possible_rank_min','possible_rank_max','evidence_status','assumptions_and_limits','public_source_urls'];
+const leadingFields=['display_name','fellowship_year','age_evidence_precision','attained_age_or_bound','possible_rank_min','possible_rank_max','age_status','assumptions_and_limits','public_source_urls'];
 table('Leading Candidates',d.people.filter(r=>r.possible_rank_min<=10||['Ethel Kvalheim','Ella Jenkins'].includes(r.display_name)),leadingFields);
 table('Unresolved Collectives',d.unresolved_collectives,['award_id','display_name','public_source_url','review_status','unresolved_reason']);
 const sources=table('Source Register',d.sources,['source_id','public_source_url','source_publication_date','retrieval_date','link_status','rights_status']);

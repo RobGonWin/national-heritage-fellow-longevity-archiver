@@ -6,7 +6,7 @@ from nea_archiver.nea_ranking import build_individual_ranking
 def person(identifier, age=None, *, exact=False, status=None):
     row = {"person_id": identifier, "name": identifier, "award_year": 2000,
            "profile_url": "https://example.test/" + identifier,
-           "status": status or ("verified_equal_roma" if exact else "bounded_below_roma_at_cutoff"),
+           "status": status or ("exact_lifespan_equal_reference" if exact else "upper_bound_below_reference_at_cutoff"),
            "completed_lifespan_documented": exact}
     if age is not None:
         row["upper_age"] = age

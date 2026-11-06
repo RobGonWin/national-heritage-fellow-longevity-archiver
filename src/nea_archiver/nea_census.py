@@ -235,7 +235,7 @@ def plan_closure_batch(people: list[dict], *, person_limit: int = 30,
         raise ValueError("Closure batch limits must be positive")
     open_people = [person for person in people
                    if person.get("privacy_label") == "public_ok"
-                   and person.get("status") not in {"verified_below_roma", "bounded_below_roma_at_cutoff"}]
+                   and person.get("status") not in {"exact_lifespan_below_reference", "upper_bound_below_reference_at_cutoff"}]
     selected = prioritize_people(open_people, preferred_names)[:person_limit]
     queries = []
     for person in selected:

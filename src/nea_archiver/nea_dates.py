@@ -75,9 +75,9 @@ def compare_age(birth: DateInterval, death: DateInterval | None,
     is_exact = (birth.earliest == birth.latest and death is not None
                 and death.earliest == death.latest and death.latest <= cutoff)
     if upper < reference:
-        status = "verified_below_roma" if is_exact else "bounded_below_roma_at_cutoff"
+        status = "exact_lifespan_below_reference" if is_exact else "upper_bound_below_reference_at_cutoff"
     elif is_exact:
-        status = "verified_equal_roma" if upper == reference else "verified_above_roma"
+        status = "exact_lifespan_equal_reference" if upper == reference else "exact_lifespan_above_reference"
     else:
         status = "possible_competitor"
     result = {"status": status, "upper_age": list(upper), "upper_age_calendar": age_label(upper),
