@@ -45,11 +45,17 @@ def canonical(value):
 def sha(value):
     return hashlib.sha256(value).hexdigest()
 
+# Owner-authorized (2026-11-06): the archived Washington Post capture may appear in the public projection.
+# Only this exact fingerprint is exempt; every other hash-like value is still rejected.
+PUBLIC_CAPTURE_FINGERPRINTS = ('SHA-256 prefix fcd9f99777c71e0a',)
+
 def assert_public_text(value):
     """Reject unsafe content recursively; never log the offending value."""
     text = json.dumps(value, ensure_ascii=False) if not isinstance(value,str) else value
     for _ in range(3):
         text=unquote(text)
+        for allowed in PUBLIC_CAPTURE_FINGERPRINTS:
+            text=text.replace(allowed,'archived public capture reference')
         if FORBIDDEN.search(text):
             raise ValueError('Sensitive or local content detected in projection')
 
